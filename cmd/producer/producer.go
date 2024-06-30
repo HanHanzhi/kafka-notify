@@ -61,13 +61,13 @@ func sendKafkaMessage(producer sarama.SyncProducer, users []models.User, ctx *gi
 		return fmt.Errorf("failed to marshal notificaiton: %w", err)
 	}
 
-	msg := &sarama.ProducerMessage{
+	msg := &sarama.ProducerMessage{ //Constructs a ProducerMessage for the "notifications" topic
 		Topic: KafkaTopic,
-		Key:   sarama.StringEncoder(strconv.Itoa(toUser.ID)),
-		Value: sarama.StringEncoder(notificationJSON),
+		Key:   sarama.StringEncoder(strconv.Itoa(toUser.ID)), //setting the recipient’s ID as the Key and
+		Value: sarama.StringEncoder(notificationJSON),        //the message content, which is the serialized form of the Notification as the Value.
 	}
 
-	_, _, err = producer.SendMessage(msg)
+	_, _, err = producer.SendMessage(msg) //Sends the constructed message to the "notifications" topic.
 	return err
 }
 
